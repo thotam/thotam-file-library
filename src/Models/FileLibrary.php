@@ -5,7 +5,7 @@ namespace Thotam\ThotamFileLibrary\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ThotamFileLibrary extends Model
+class FileLibrary extends Model
 {
     use HasFactory;
     use SoftDeletes;
@@ -24,4 +24,12 @@ class ThotamFileLibrary extends Model
      * @var string
      */
     protected $table = 'thotam_file_libraries';
+
+    /**
+     * Get the parent file_library_table model FileLibrary.
+     */
+    public function file_library_table()
+    {
+        return $this->morphTo();
+    }
 }
