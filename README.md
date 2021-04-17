@@ -17,13 +17,36 @@ composer require thotam/thotam-file-library
 
 ## Usage
 
-``` php
-// Usage description here
+### Add this to config/filesystems.php
+
+```php
+    'google' => [
+        'driver' => 'google',
+        'clientId' => env('MAIN_GOOGLE_DRIVE_CLIENT_ID'),
+        'clientSecret' => env('MAIN_GOOGLE_DRIVE_CLIENT_SECRET'),
+        'refreshToken' => env('MAIN_GOOGLE_DRIVE_REFRESH_TOKEN'),
+        'folderId' => env('MAIN_GOOGLE_DRIVE_FOLDER_ID'),
+    ],
+```
+
+### Add this to .env
+
+```php
+    MAIN_GOOGLE_DRIVE_CLIENT_ID=""
+    MAIN_GOOGLE_DRIVE_CLIENT_SECRET=""
+    MAIN_GOOGLE_DRIVE_REFRESH_TOKEN=""
+    MAIN_GOOGLE_DRIVE_FOLDER_ID=""
+```
+
+### Add ThotamGoogleDriveServiceProvider
+
+```php
+    add Thotam\ThotamFileLibrary\Providers\ThotamGoogleDriveServiceProvider::class to 'providers' in config/app.php
 ```
 
 ### Testing
 
-``` bash
+```bash
 composer test
 ```
 
@@ -41,8 +64,8 @@ If you discover any security related issues, please email thanhtamtqno1@gmail.co
 
 ## Credits
 
-- [thotam](https://github.com/thotam)
-- [All Contributors](../../contributors)
+-   [thotam](https://github.com/thotam)
+-   [All Contributors](../../contributors)
 
 ## License
 
