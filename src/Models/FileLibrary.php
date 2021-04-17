@@ -2,8 +2,10 @@
 
 namespace Thotam\ThotamFileLibrary\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Wildside\Userstamps\Userstamps;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class FileLibrary extends Model
 {
@@ -26,9 +28,9 @@ class FileLibrary extends Model
     protected $table = 'thotam_file_libraries';
 
     /**
-     * Get the parent file_library_table model FileLibrary.
+     * Get the parent file_library model FileLibrary.
      */
-    public function file_library_table()
+    public function file_library()
     {
         return $this->morphTo();
     }
