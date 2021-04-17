@@ -3,7 +3,6 @@
 namespace Thotam\ThotamFileLibrary\Traits;
 
 use Thotam\ThotamFileLibrary\Models\FileLibrary;
-use Illuminate\Support\Collection;
 
 trait FileLibraryTraits {
 
@@ -12,7 +11,7 @@ trait FileLibraryTraits {
      */
     public function file_libraries()
     {
-        return $this->morphMany(FileLibrary::class, 'file_library_table');
+        return $this->morphMany(FileLibrary::class, 'file_library');
     }
 
     /**
@@ -38,7 +37,7 @@ trait FileLibraryTraits {
      * @param  mixed $tag
      * @return void
      */
-    public function addLibraries(Collection $libs, String $tag = null)
+    public function addLibraries($libs, String $tag = null)
     {
         foreach ($libs as $lib) {
             $this->addLibrary($lib, $tag);
@@ -53,7 +52,7 @@ trait FileLibraryTraits {
      */
     public function removeLibrary(FileLibrary $lib)
     {
-        $lib->fileLibrary_table()->delete();
+        $lib->file_library()->dissociate()->save();
     }
 
     /**
@@ -63,7 +62,7 @@ trait FileLibraryTraits {
      * @param  mixed $tag
      * @return void
      */
-    public function removeLibraries(Collection $libs, String $tag = null)
+    public function removeLibraries($libs, String $tag = null)
     {
         foreach ($libs as $lib) {
             $this->removeLibrary($lib, $tag);
