@@ -21,8 +21,9 @@ class CreateThotamFileLibrariesTable extends Migration
             $table->longText('google_virtual_path')->nullable()->default(null);
             $table->longText('google_display_path')->nullable()->default(null);
             $table->longText('google_id')->nullable()->default(null);
-            $table->morphs('file_library_table');
-            $table->string('tag', 100);
+            $table->bigInteger('file_library_id')->unsigned()->nullable()->default(null);
+            $table->longText('file_library_type')->nullable()->default(null);
+            $table->string('tag', 100)->nullable()->default(null);
             $table->boolean('active')->nullable()->default(null);
             $table->unsignedBigInteger('created_by')->nullable()->default(null);
             $table->unsignedBigInteger('updated_by')->nullable()->default(null);
