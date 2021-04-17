@@ -88,7 +88,7 @@ trait ThotamFileUploadTraits
         $this->put_to_db();
         $this->add_jobs();
 
-        return $this->fileUpload->id;
+        return $this->fileUpload;
     }
 
     /**
@@ -122,6 +122,7 @@ trait ThotamFileUploadTraits
         $FileLibrary = FileLibrary::create([
             "drive" => "public",
             "file_name" => $this->file_name,
+            "active" => true,
             "local_path" => $this->local_path,
         ]);
 
