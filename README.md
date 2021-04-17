@@ -20,22 +20,22 @@ composer require thotam/thotam-file-library
 ### Add this to config/filesystems.php
 
 ```php
-    'google' => [
-        'driver' => 'google',
-        'clientId' => env('MAIN_GOOGLE_DRIVE_CLIENT_ID'),
-        'clientSecret' => env('MAIN_GOOGLE_DRIVE_CLIENT_SECRET'),
-        'refreshToken' => env('MAIN_GOOGLE_DRIVE_REFRESH_TOKEN'),
-        'folderId' => env('MAIN_GOOGLE_DRIVE_FOLDER_ID'),
-    ],
+        'google' => [
+            'driver' => 'google',
+            'clientId' => env('MAIN_GOOGLE_DRIVE_CLIENT_ID'),
+            'clientSecret' => env('MAIN_GOOGLE_DRIVE_CLIENT_SECRET'),
+            'refreshToken' => env('MAIN_GOOGLE_DRIVE_REFRESH_TOKEN'),
+            'folderId' => env('MAIN_GOOGLE_DRIVE_FOLDER_ID'),
+        ],
 ```
 
 ### Add this to .env
 
 ```php
-    MAIN_GOOGLE_DRIVE_CLIENT_ID=""
-    MAIN_GOOGLE_DRIVE_CLIENT_SECRET=""
-    MAIN_GOOGLE_DRIVE_REFRESH_TOKEN=""
-    MAIN_GOOGLE_DRIVE_FOLDER_ID=""
+MAIN_GOOGLE_DRIVE_CLIENT_ID=""
+MAIN_GOOGLE_DRIVE_CLIENT_SECRET=""
+MAIN_GOOGLE_DRIVE_REFRESH_TOKEN=""
+MAIN_GOOGLE_DRIVE_FOLDER_ID=""
 ```
 
 ### Add ThotamGoogleDriveServiceProvider
