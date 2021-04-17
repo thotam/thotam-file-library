@@ -41,7 +41,7 @@ MAIN_GOOGLE_DRIVE_FOLDER_ID=""
 ### Add ThotamGoogleDriveServiceProvider
 
 ```php
-    add Thotam\ThotamFileLibrary\Providers\ThotamGoogleDriveServiceProvider::class to 'providers' in config/app.php
+add Thotam\ThotamFileLibrary\Providers\ThotamGoogleDriveServiceProvider::class to 'providers' in config/app.php
 ```
 
 ### Testing
