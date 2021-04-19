@@ -65,7 +65,42 @@ trait FileLibraryTraits {
     public function removeLibraries($libs, String $tag = null)
     {
         foreach ($libs as $lib) {
-            $this->removeLibrary($lib, $tag);
+            $this->removeLibrary($lib);
         }
     }
+
+    /**
+     * getLibrary
+     *
+     * @param  mixed $tag
+     * @return void
+     */
+    public function getLibrary(String $tag = null)
+    {
+        $library = $this->file_libraries()->latest();
+
+        if (!!$tag) {
+            $library->where("tag", $tag);
+        }
+
+        return $library->first();
+    }
+
+    /**
+     * getLibraries
+     *
+     * @param  mixed $tag
+     * @return void
+     */
+    public function getLibraries(String $tag = null)
+    {
+        $library = $this->file_libraries();
+
+        if (!!$tag) {
+            $library->where("tag", $tag);
+        }
+
+        return $library->get();
+    }
+
 }
