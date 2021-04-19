@@ -38,13 +38,11 @@ class GoogleDriveUpload implements ShouldQueue
         Log::info("ThotamFileLibrary upload to Google ID: ".$this->fileUpload->id. " - starting");
         $disk = Storage::disk('google');
 
-        $disk->putStream($this->fileUpload->local_path, fopen(Storage::disk('public')->path($this->fileUpload->local_path), 'r+'), ["mimetype" => Storage::disk('public')->mimeType($this->fileUpload->local_path)]);
+        $disk->putStream($this->fileUpload->local_path, fopen(Storage::disk('public')->path($this->fileUpload->local_path), 'r+'), ["mimetype" => Storage::disk('public')->mimeType($this->fileUpload->local_path), 'visibility' => 'public']);
 
         $adapter = $disk->getDriver()->getAdapter();
 
         $metadata = $adapter->getMetadata($this->fileUpload->local_path);
-
-        $disk->setVisibility($metadata["display_path"], 'public');
 
         $getFileObject = $adapter->getFileObject($metadata["virtual_path"]);
 
