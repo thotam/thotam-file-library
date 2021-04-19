@@ -83,7 +83,7 @@ trait ThotamFileUploadTraits
     {
         $this->temp_file = $file;
         $this->file_path = $path;
-        $this->file_name = $file_name;
+        $this->file_name = $file_name." ".$this->temp_file->getClientOriginalName();
         $this->saveAs();
         $this->put_to_db();
         $this->add_jobs();
