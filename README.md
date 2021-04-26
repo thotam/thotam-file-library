@@ -44,6 +44,18 @@ MAIN_GOOGLE_DRIVE_FOLDER_ID=""
 add Thotam\ThotamFileLibrary\Providers\ThotamGoogleDriveServiceProvider::class to 'providers' in config/app.php
 ```
 
+### Add FileLibraryTraits to you Model you want to you
+
+```php
+use Thotam\ThotamFileLibrary\Traits\FileLibraryTraits;
+```
+
+### Add ThotamFileUploadTraits to you Livewire class you want to handle your file
+
+```php
+use Thotam\ThotamFileLibrary\Traits\ThotamFileUploadTraits;
+```
+
 ### Testing
 
 ```bash
