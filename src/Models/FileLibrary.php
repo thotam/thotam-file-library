@@ -34,4 +34,24 @@ class FileLibrary extends Model
     {
         return $this->morphTo();
     }
+
+    /**
+     * getViewLinkAttribute
+     *
+     * @return void
+     */
+    public function getViewLinkAttribute()
+    {
+        return route('filelibrary.view', ['id' => $this->id]);
+    }
+
+    /**
+     * getDownloadLinkAttribute
+     *
+     * @return void
+     */
+    public function getDownloadLinkAttribute()
+    {
+        return route('filelibrary.download', ['id' => $this->id]);
+    }
 }
