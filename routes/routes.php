@@ -14,7 +14,7 @@ use Thotam\ThotamFileLibrary\Http\Controllers\FileLibraryController;
 |
 */
 
-Route::middleware(['web', 'auth', 'CheckAccount', 'CheckHr'])->group(function () {
+Route::middleware(['web', 'auth', 'CheckAccount', 'CheckHr', 'CheckInfo'])->group(function () {
 
     //Route FileLibrary
     Route::redirect('filelibrary', '/', 301);
