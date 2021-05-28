@@ -20,7 +20,7 @@
         "illuminate/console": "^8.0",
         "illuminate/contracts": "^8.0",
         "illuminate/support": "^8.0",
-        "masbug/flysystem-google-drive-ext": "dev-master"
+        "masbug/flysystem-google-drive-ext": "^1.2"
     },
     "require-dev": {
         "orchestra/testbench": "^6.0",
