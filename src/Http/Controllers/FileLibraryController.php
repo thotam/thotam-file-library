@@ -4,6 +4,7 @@ namespace Thotam\ThotamFileLibrary\Http\Controllers;
 
 use Auth;
 use Response;
+use Google_Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Thotam\ThotamFileLibrary\ThotamVideoStream;
@@ -67,7 +68,21 @@ class FileLibraryController extends Controller
         $file = FileLibrary::find($id);
         if (!!$file) {
             if ($file->drive == 'google') {
-                return redirect(Storage::disk('public')->url("Media/thumbnail-default.png"));
+                $client = new Google_Client();
+                $config = config()["filesystems"]["disks"]["google"];
+                $client->setClientId($config['clientId']);
+                $client->setClientSecret($config['clientSecret']);
+                $client->refreshToken($config['refreshToken']);
+                $service = new \Google_Service_Drive($client);
+                $request = $service->files->get(
+                    $file->google_id, array('fields' => 'thumbnailLink')
+                );
+
+                if (!!$request->thumbnailLink) {
+                    return redirect(str_replace("=s220","=s660", $request->thumbnailLink));
+                } else {
+                    return redirect(Storage::disk('public')->url("Media/thumbnail-default.png"));
+                }
             } else {
                 return redirect(Storage::disk('public')->url("Media/thumbnail-default.png"));
             }
