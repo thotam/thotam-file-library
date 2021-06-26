@@ -9,7 +9,7 @@ use Thotam\ThotamFileLibrary\Jobs\GoogleDriveUpload;
 
 trait ThotamFileUploadTraits
 {
-    protected $file_path, $temp_file, $file_name, $fileUpload, $local_path;
+    protected $file_path, $temp_file, $file_name, $fileUpload, $local_path, $mime_type;
 
     public $ThotamFileUploadStep = [], $ThotamFileUploadMethod = NULL, $ThotamFileId = NULL, $ThotamFileSubmit = false;
 
@@ -84,6 +84,7 @@ trait ThotamFileUploadTraits
         $this->temp_file = $file;
         $this->file_path = $path;
         $this->file_name = $file_name." ".$this->temp_file->getClientOriginalName();
+        $this->mime_type = $this->temp_file->getMimeType();
         $this->saveAs();
         $this->put_to_db();
         $this->add_jobs();
@@ -122,6 +123,7 @@ trait ThotamFileUploadTraits
         $FileLibrary = FileLibrary::create([
             "drive" => "public",
             "file_name" => $this->file_name,
+            "mime_type" => $this->mime_type,
             "active" => true,
             "local_path" => $this->local_path,
         ]);

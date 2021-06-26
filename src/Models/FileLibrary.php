@@ -57,20 +57,6 @@ class FileLibrary extends Model
     }
 
     /**
-     * getMimeTypeAttribute
-     *
-     * @return void
-     */
-    public function getMimeTypeAttribute()
-    {
-        if ($this->drive == 'google') {
-            return Storage::disk('google')->mimeType($this->google_display_path);
-        } else {
-            return Storage::disk('public')->mimeType($this->local_path);
-        }
-    }
-
-    /**
      * getThumbnailAttribute
      *
      * @return void
