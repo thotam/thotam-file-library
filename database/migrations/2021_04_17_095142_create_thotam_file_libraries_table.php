@@ -17,6 +17,7 @@ class CreateThotamFileLibrariesTable extends Migration
             $table->id();
             $table->string('drive', 100);
             $table->longText('file_name')->nullable()->default(null);
+            $table->longText('mime_type')->nullable()->default(null);
             $table->longText('local_path')->nullable()->default(null);
             $table->longText('google_virtual_path')->nullable()->default(null);
             $table->longText('google_display_path')->nullable()->default(null);

@@ -6,6 +6,7 @@ use Wildside\Userstamps\Userstamps;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Storage;
 
 class FileLibrary extends Model
 {
@@ -53,5 +54,29 @@ class FileLibrary extends Model
     public function getDownloadLinkAttribute()
     {
         return route('filelibrary.download', ['id' => $this->id]);
+    }
+
+    /**
+     * getMimeTypeAttribute
+     *
+     * @return void
+     */
+    public function getMimeTypeAttribute()
+    {
+        if ($this->drive == 'google') {
+            return Storage::disk('google')->mimeType($this->google_display_path);
+        } else {
+            return Storage::disk('public')->mimeType($this->local_path);
+        }
+    }
+
+    /**
+     * getThumbnailAttribute
+     *
+     * @return void
+     */
+    public function getThumbnailAttribute()
+    {
+        return route('filelibrary.thumbnail', ['id' => $this->id]);
     }
 }

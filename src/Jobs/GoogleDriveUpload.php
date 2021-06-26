@@ -16,7 +16,7 @@ class GoogleDriveUpload implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $fileUpload;
+    public $fileUpload, $mime_type;
 
     /**
      * Create a new job instance.
@@ -38,7 +38,9 @@ class GoogleDriveUpload implements ShouldQueue
         Log::info("ThotamFileLibrary upload to Google ID: ".$this->fileUpload->id. " - starting");
         $disk = Storage::disk('google');
 
-        $disk->putStream($this->fileUpload->local_path, fopen(Storage::disk('public')->path($this->fileUpload->local_path), 'r+'), ["mimetype" => Storage::disk('public')->mimeType($this->fileUpload->local_path), 'visibility' => 'public']);
+        $this->mime_type = Storage::disk('public')->mimeType($this->fileUpload->local_path);
+
+        $disk->putStream($this->fileUpload->local_path, fopen(Storage::disk('public')->path($this->fileUpload->local_path), 'r+'), ["mimetype" => $this->mime_type, 'visibility' => 'public']);
 
         $adapter = $disk->getDriver()->getAdapter();
 
@@ -48,6 +50,7 @@ class GoogleDriveUpload implements ShouldQueue
 
         $this->fileUpload->update([
             "drive" => "google",
+            "mime_type" => $this->mime_type,
             "google_virtual_path" => $metadata["virtual_path"],
             "google_display_path" => $metadata["display_path"],
             "google_id" => $getFileObject->id,

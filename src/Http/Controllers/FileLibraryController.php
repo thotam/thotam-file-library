@@ -54,4 +54,27 @@ class FileLibraryController extends Controller
             ]);
         }
     }
+
+    /**
+     * thumbnail
+     *
+     * @return void
+     */
+    public function thumbnail($id)
+    {
+        $file = FileLibrary::find($id);
+        if (!!$file) {
+            if ($file->drive == 'google') {
+                return redirect(Storage::disk('public')->url("Media/thumbnail-default.png"));
+            } else {
+                return redirect(Storage::disk('public')->url("Media/thumbnail-default.png"));
+            }
+        } else {
+            return view('thotam-file-library::errors.dynamic', [
+                'error_code' => '404',
+                'error_description' => 'Không tìm thấy file này',
+                'title' => 'FileLibrary',
+            ]);
+        }
+    }
 }

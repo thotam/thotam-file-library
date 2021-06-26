@@ -22,6 +22,7 @@ Route::middleware(['web', 'auth', 'CheckAccount', 'CheckHr', 'CheckInfo'])->grou
 
         Route::get('{id}/view',  [FileLibraryController::class, 'view'])->name('filelibrary.view');
         Route::get('{id}/download',  [FileLibraryController::class, 'download'])->name('filelibrary.download');
+        Route::get('{id}/thumbnail',  [FileLibraryController::class, 'thumbnail'])->name('filelibrary.thumbnail');
 
     });
 
