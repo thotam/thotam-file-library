@@ -57,6 +57,16 @@ class FileLibrary extends Model
     }
 
     /**
+     * getStreamLinkAttribute
+     *
+     * @return void
+     */
+    public function getStreamLinkAttribute()
+    {
+        return route('filelibrary.stream', ['id' => $this->id]);
+    }
+
+    /**
      * getThumbnailAttribute
      *
      * @return void

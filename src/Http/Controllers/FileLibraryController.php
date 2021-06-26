@@ -3,9 +3,11 @@
 namespace Thotam\ThotamFileLibrary\Http\Controllers;
 
 use Auth;
+use Response;
 use Illuminate\Http\Request;
-use Thotam\ThotamFileLibrary\Models\FileLibrary;
 use Illuminate\Support\Facades\Storage;
+use Thotam\ThotamFileLibrary\ThotamVideoStream;
+use Thotam\ThotamFileLibrary\Models\FileLibrary;
 
 class FileLibraryController extends Controller
 {
@@ -77,4 +79,30 @@ class FileLibraryController extends Controller
             ]);
         }
     }
+    /**
+     * stream getObjects
+     *
+     * @return void
+     */
+    public function stream($id)
+    {
+        $file = FileLibrary::find($id);
+        if (!!$file) {
+            if ($file->drive == 'google') {
+                return redirect(Storage::disk('google')->getAdapter()->getFileObject($file->google_virtual_path)->webContentLink);
+
+                //return redirect("https://www.googleapis.com/drive/v3/files/".$file->google_id."?alt=media&key=AIzaSyCeW3aF9AgVFkjb6eBKfoaBdwJAzJqYn4c");
+            } else {
+                $stream = new ThotamVideoStream(Storage::disk('public')->path($file->local_path));
+                $stream->start();
+            }
+        } else {
+            return view('thotam-file-library::errors.dynamic', [
+                'error_code' => '404',
+                'error_description' => 'Không tìm thấy file này',
+                'title' => 'FileLibrary',
+            ]);
+        }
+    }
+
 }
