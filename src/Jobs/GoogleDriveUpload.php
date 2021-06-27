@@ -56,7 +56,11 @@ class GoogleDriveUpload implements ShouldQueue
             "google_id" => $getFileObject->id,
         ]);
 
-        Storage::disk('public')->delete($this->fileUpload->local_path);
+        $check = FileLibrary::find($this->fileUpload->id);
+        if (!!$check->vimeo_id) {
+            Storage::disk('public')->delete($this->fileUpload->local_path);
+        }
+
         Log::info("ThotamFileLibrary upload to Google ID: ".$this->fileUpload->id. " - finished");
     }
 }

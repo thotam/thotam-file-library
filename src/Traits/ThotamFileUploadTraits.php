@@ -4,12 +4,13 @@ namespace Thotam\ThotamFileLibrary\Traits;
 
 use Livewire\TemporaryUploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Thotam\ThotamFileLibrary\Jobs\VimeoUpload;
 use Thotam\ThotamFileLibrary\Models\FileLibrary;
 use Thotam\ThotamFileLibrary\Jobs\GoogleDriveUpload;
 
 trait ThotamFileUploadTraits
 {
-    protected $file_path, $temp_file, $file_name, $fileUpload, $local_path, $mime_type;
+    protected $file_path, $temp_file, $file_name, $fileUpload, $local_path, $mime_type, $vimeo = false, $vimeo_name, $vimeo_description, $vimeo_view;
 
     public $ThotamFileUploadStep = [], $ThotamFileUploadMethod = NULL, $ThotamFileId = NULL, $ThotamFileSubmit = false;
 
@@ -93,13 +94,31 @@ trait ThotamFileUploadTraits
     }
 
     /**
+     * save_to_vimeo
+     *
+     * @param  mixed $file
+     * @param  mixed $path
+     * @param  mixed $file_name
+     * @return void
+     */
+    protected function save_to_vimeo(TemporaryUploadedFile $file, $path, $file_name, $vimeo_name = NULL, $vimeo_description = NULL, $vimeo_view = "disable")
+    {
+        $this->vimeo = true;
+        $this->vimeo_name = $vimeo_name;
+        $this->vimeo_description = $vimeo_description;
+        $this->vimeo_view = $vimeo_view;
+
+        return $this->save_to_drive($file, $path, $file_name);
+    }
+
+    /**
      * saveAs
      *
      * @return void
      */
     protected function saveAs()
     {
-        $this->local_path = $temp_filesss = $this->temp_file->storeAs($this->file_path, $this->file_name, ["disk" => "public"]);
+        $this->local_path = $this->temp_file->storeAs($this->file_path, $this->file_name, ["disk" => "public"]);
     }
 
     /**
@@ -128,6 +147,15 @@ trait ThotamFileUploadTraits
             "local_path" => $this->local_path,
         ]);
 
+        if ($this->vimeo) {
+            $FileLibrary->update([
+                "vimeo" => true,
+                "vimeo_name" => $this->vimeo_name,
+                "vimeo_description" => $this->vimeo_description,
+                "vimeo_view" => $this->vimeo_view,
+            ]);
+        }
+
         $this->fileUpload = $FileLibrary;
     }
 
@@ -138,6 +166,10 @@ trait ThotamFileUploadTraits
      */
     protected function add_jobs()
     {
+        if ($this->vimeo) {
+            VimeoUpload::dispatch($this->fileUpload);
+        }
+
         GoogleDriveUpload::dispatch($this->fileUpload);
     }
 

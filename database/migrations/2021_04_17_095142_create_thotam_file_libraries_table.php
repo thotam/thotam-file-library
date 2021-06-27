@@ -22,6 +22,11 @@ class CreateThotamFileLibrariesTable extends Migration
             $table->longText('google_virtual_path')->nullable()->default(null);
             $table->longText('google_display_path')->nullable()->default(null);
             $table->longText('google_id')->nullable()->default(null);
+            $table->boolean('vimeo')->nullable()->default(null);
+            $table->longText('vimeo_id')->nullable()->default(null);
+            $table->longText('vimeo_name')->nullable()->default(null);
+            $table->longText('vimeo_description')->nullable()->default(null);
+            $table->longText('vimeo_view')->nullable()->default(null);
             $table->bigInteger('file_library_id')->unsigned()->nullable()->default(null);
             $table->longText('file_library_type')->nullable()->default(null);
             $table->string('tag', 100)->nullable()->default(null);
