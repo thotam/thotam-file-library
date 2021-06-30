@@ -67,6 +67,16 @@ class FileLibrary extends Model
     }
 
     /**
+     * getVideoLinkAttribute
+     *
+     * @return void
+     */
+    public function getVideoLinkAttribute()
+    {
+        return route('filelibrary.video', ['id' => $this->id]);
+    }
+
+    /**
      * getThumbnailAttribute
      *
      * @return void

@@ -2,6 +2,7 @@
 
 namespace Thotam\ThotamFileLibrary\Jobs;
 
+use Illuminate\Support\Str;
 use Illuminate\Bus\Queueable;
 use Vimeo\Laravel\Facades\Vimeo;
 use Illuminate\Support\Facades\Log;
@@ -49,7 +50,7 @@ class VimeoUpload implements ShouldQueue
         $response = Vimeo::upload(Storage::disk('public')->path($this->fileUpload->local_path), $parameters);
 
         $this->fileUpload->update([
-            "vimeo_id" => $response,
+            "vimeo_id" => Str::of($response)->explode('/')->last(),
         ]);
 
         $check = FileLibrary::find($this->fileUpload->id);
