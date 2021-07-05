@@ -103,7 +103,7 @@ trait ThotamFileUploadTraits
      * @param  mixed $file_name
      * @return void
      */
-    protected function save_to_youtube(TemporaryUploadedFile $file, $path, $file_name, $youtube_data = [], $youtube_description = "unlisted")
+    protected function save_to_youtube(TemporaryUploadedFile $file, $path, $file_name, $youtube_data = [], $youtube_privacy_status = "unlisted")
     {
         $this->youtube = true;
         $this->youtube_data = $youtube_data;
