@@ -5,12 +5,14 @@ namespace Thotam\ThotamFileLibrary\Traits;
 use Livewire\TemporaryUploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Thotam\ThotamFileLibrary\Jobs\VimeoUpload;
+use Thotam\ThotamFileLibrary\Jobs\YoutubeUpload;
 use Thotam\ThotamFileLibrary\Models\FileLibrary;
 use Thotam\ThotamFileLibrary\Jobs\GoogleDriveUpload;
 
 trait ThotamFileUploadTraits
 {
     protected $file_path, $temp_file, $file_name, $fileUpload, $local_path, $mime_type, $vimeo = false, $vimeo_name, $vimeo_description, $vimeo_view;
+    protected $youtube, $youtube_data = [], $youtube_privacy_status;
 
     public $ThotamFileUploadStep = [], $ThotamFileUploadMethod = NULL, $ThotamFileId = NULL, $ThotamFileSubmit = false;
 
@@ -94,6 +96,25 @@ trait ThotamFileUploadTraits
     }
 
     /**
+     * save_to_youtube
+     *
+     * @param  mixed $file
+     * @param  mixed $path
+     * @param  mixed $file_name
+     * @return void
+     */
+    protected function save_to_youtube(TemporaryUploadedFile $file, $path, $file_name, $youtube_data = [], $youtube_description = "unlisted")
+    {
+        $this->youtube = true;
+        $this->youtube_data = $youtube_data;
+        $this->youtube_privacy_status = $youtube_privacy_status;
+
+        return $this->save_to_vimeo($file, $path, $file_name, $youtube_data['title']);
+
+        //return $this->save_to_drive($file, $path, $file_name);
+    }
+
+    /**
      * save_to_vimeo
      *
      * @param  mixed $file
@@ -147,6 +168,14 @@ trait ThotamFileUploadTraits
             "local_path" => $this->local_path,
         ]);
 
+        if ($this->youtube) {
+            $FileLibrary->update([
+                "youtube" => true,
+                "youtube_data" => $this->youtube_data,
+                "youtube_privacy_status" => $this->youtube_privacy_status,
+            ]);
+        }
+
         if ($this->vimeo) {
             $FileLibrary->update([
                 "vimeo" => true,
@@ -166,6 +195,10 @@ trait ThotamFileUploadTraits
      */
     protected function add_jobs()
     {
+        if ($this->youtube) {
+            YoutubeUpload::dispatch($this->fileUpload);
+        }
+
         if ($this->vimeo) {
             VimeoUpload::dispatch($this->fileUpload);
         }

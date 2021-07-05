@@ -2,9 +2,7 @@
 
 namespace Thotam\ThotamFileLibrary\Jobs;
 
-use Illuminate\Support\Str;
 use Illuminate\Bus\Queueable;
-use Vimeo\Laravel\Facades\Vimeo;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Storage;
@@ -12,13 +10,14 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
+use Thotam\ThotamFileLibrary\Services\Youtube;
 use Thotam\ThotamFileLibrary\Models\FileLibrary;
 
-class VimeoUpload implements ShouldQueue
+class YoutubeUpload implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $fileUpload, $mime_type;
+    public $fileUpload;
 
     /**
      * Create a new job instance.
@@ -37,27 +36,21 @@ class VimeoUpload implements ShouldQueue
      */
     public function handle()
     {
-        Log::info("ThotamFileLibrary upload to Vimeo: ".$this->fileUpload->id. " - starting");
+        Log::info("ThotamFileLibrary upload to Youtube: ".$this->fileUpload->id. " - starting");
 
-        $parameters = [
-            'name' => $this->fileUpload->vimeo_name,
-            'description' => $this->fileUpload->vimeo_description,
-            'privacy' => [
-                'view' => $this->fileUpload->vimeo_view,
-            ],
-        ];
+        $youtube = new Youtube;
 
-        $response = Vimeo::upload(Storage::disk('public')->path($this->fileUpload->local_path), $parameters);
+        $response = $youtube->upload(Storage::disk('public')->path($this->fileUpload->local_path), $this->fileUpload->youtube_data, $this->fileUpload->youtube_privacy_status);
 
         $this->fileUpload->update([
-            "vimeo_id" => Str::of($response)->explode('/')->last(),
+            "youtube_id" => $response->videoId,
         ]);
 
         $check = FileLibrary::find($this->fileUpload->id);
-        if (!!$check->google_id && !!$check->youtube_id) {
+        if (!!$check->google_id && !!$check->vimeo_id) {
             Storage::disk('public')->delete($this->fileUpload->local_path);
         }
 
-        Log::info("ThotamFileLibrary upload to Vimeo: ".$this->fileUpload->id. " - finished");
+        Log::info("ThotamFileLibrary upload to Youtube: ".$this->fileUpload->id. " - finished");
     }
 }
