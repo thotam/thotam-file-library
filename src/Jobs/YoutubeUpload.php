@@ -47,7 +47,8 @@ class YoutubeUpload implements ShouldQueue
         ]);
 
         $check = FileLibrary::find($this->fileUpload->id);
-        if (!!$check->google_id && !!$check->vimeo_id) {
+        //if (!!$check->google_id && !!$check->vimeo_id) {
+        if (!!$check->google_id) {
             Storage::disk('public')->delete($this->fileUpload->local_path);
         }
 

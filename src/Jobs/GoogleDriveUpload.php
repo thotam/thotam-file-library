@@ -57,7 +57,7 @@ class GoogleDriveUpload implements ShouldQueue
         ]);
 
         $check = FileLibrary::find($this->fileUpload->id);
-        if (!!$check->vimeo_id && !!$check->youtube_id) {
+        if (!!$check->vimeo_id || !!$check->youtube_id) {
             Storage::disk('public')->delete($this->fileUpload->local_path);
         }
 

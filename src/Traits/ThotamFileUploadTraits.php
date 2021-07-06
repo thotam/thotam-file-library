@@ -109,9 +109,9 @@ trait ThotamFileUploadTraits
         $this->youtube_data = $youtube_data;
         $this->youtube_privacy_status = $youtube_privacy_status;
 
-        return $this->save_to_vimeo($file, $path, $file_name, $youtube_data['title']);
+        //return $this->save_to_vimeo($file, $path, $file_name, $youtube_data['title']);
 
-        //return $this->save_to_drive($file, $path, $file_name);
+        return $this->save_to_drive($file, $path, $file_name);
     }
 
     /**
