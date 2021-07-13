@@ -23,6 +23,7 @@ Route::middleware(['web', 'auth', 'CheckAccount', 'CheckHr', 'CheckInfo'])->grou
         Route::get('{id}/view',  [FileLibraryController::class, 'view'])->name('filelibrary.view');
         Route::get('{id}/embed',  [FileLibraryController::class, 'embed'])->name('filelibrary.embed');
         Route::get('{id}/googleapis',  [FileLibraryController::class, 'googleapis'])->name('filelibrary.googleapis');
+        Route::get('{id}/image',  [FileLibraryController::class, 'image'])->name('filelibrary.image');
         Route::get('{id}/download',  [FileLibraryController::class, 'download'])->name('filelibrary.download');
         Route::get('{id}/stream',  [FileLibraryController::class, 'stream'])->name('filelibrary.stream');
         Route::get('{id}/video',  [FileLibraryController::class, 'video'])->name('filelibrary.video');

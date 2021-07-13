@@ -86,6 +86,16 @@ class FileLibrary extends Model
     }
 
     /**
+     * getImageLinkAttribute
+     *
+     * @return void
+     */
+    public function getImageLinkAttribute()
+    {
+        return route('filelibrary.image', ['id' => $this->id]);
+    }
+
+    /**
      * getGoogleapisLinkAttribute
      *
      * @return void
