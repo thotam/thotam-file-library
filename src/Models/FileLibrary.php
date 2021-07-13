@@ -56,6 +56,16 @@ class FileLibrary extends Model
     }
 
     /**
+     * getEmbedLinkAttribute
+     *
+     * @return void
+     */
+    public function getEmbedLinkAttribute()
+    {
+        return route('filelibrary.embed', ['id' => $this->id]);
+    }
+
+    /**
      * getDownloadLinkAttribute
      *
      * @return void

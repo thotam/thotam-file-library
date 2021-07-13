@@ -36,6 +36,29 @@ class FileLibraryController extends Controller
     }
 
     /**
+     * embed
+     *
+     * @return void
+     */
+    public function embed($id)
+    {
+        $file = FileLibrary::find($id);
+        if (!!$file) {
+            if ($file->drive == 'google') {
+                return response(Storage::disk('google')->get($file->google_display_path))->header('Content-Type', Storage::disk('public')->mimeType($file->google_display_path));
+            } else {
+                return response(Storage::disk('public')->get($file->local_path))->header('Content-Type', Storage::disk('public')->mimeType($file->local_path));
+            }
+        } else {
+            return view('thotam-file-library::errors.dynamic', [
+                'error_code' => '404',
+                'error_description' => 'Không tìm thấy file này',
+                'title' => 'FileLibrary',
+            ]);
+        }
+    }
+
+    /**
      * download
      *
      * @return void
