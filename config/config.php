@@ -9,5 +9,6 @@ return [
         'refreshToken' => env('MAIN_YOUTUBE_REFRESH_TOKEN', null),
         'clientSecret' => env('MAIN_YOUTUBE_CLIENT_SECRET', null),
         'clientId' => env('MAIN_YOUTUBE_CLIENT_ID', null),
-    ]
+    ],
+    'googleApiKey' => env('MAIN_GOOGLE_API_KEY', null)
 ];

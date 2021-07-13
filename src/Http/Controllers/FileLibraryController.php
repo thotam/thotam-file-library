@@ -59,6 +59,29 @@ class FileLibraryController extends Controller
     }
 
     /**
+     * googleapis
+     *
+     * @return void
+     */
+    public function googleapis($id)
+    {
+        $file = FileLibrary::find($id);
+        if (!!$file) {
+            if ($file->drive == 'google') {
+                return redirect("https://www.googleapis.com/drive/v3/files/".$file->google_id."?alt=media&key=" . config('thotam-file-library.googleApiKey'));
+            } else {
+                return response(Storage::disk('public')->get($file->local_path))->header('Content-Type', Storage::disk('public')->mimeType($file->local_path));
+            }
+        } else {
+            return view('thotam-file-library::errors.dynamic', [
+                'error_code' => '404',
+                'error_description' => 'Không tìm thấy file này',
+                'title' => 'FileLibrary',
+            ]);
+        }
+    }
+
+    /**
      * download
      *
      * @return void

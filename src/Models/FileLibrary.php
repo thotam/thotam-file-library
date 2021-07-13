@@ -86,6 +86,16 @@ class FileLibrary extends Model
     }
 
     /**
+     * getGoogleapisLinkAttribute
+     *
+     * @return void
+     */
+    public function getGoogleapisLinkAttribute()
+    {
+        return route('filelibrary.googleapis', ['id' => $this->id]);
+    }
+
+    /**
      * getVideoLinkAttribute
      *
      * @return void
