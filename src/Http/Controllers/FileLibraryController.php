@@ -59,6 +59,43 @@ class FileLibraryController extends Controller
     }
 
     /**
+     * mail_image
+     *
+     * @return void
+     */
+    public function mail_image($id)
+    {
+        $file = FileLibrary::find($id);
+        if (!!$file) {
+            if ($file->drive == 'google') {
+                $client = new Google_Client();
+                $config = config()["filesystems"]["disks"]["google"];
+                $client->setClientId($config['clientId']);
+                $client->setClientSecret($config['clientSecret']);
+                $client->refreshToken($config['refreshToken']);
+                $service = new \Google_Service_Drive($client);
+                $request = $service->files->get(
+                    $file->google_id, array('fields' => 'thumbnailLink')
+                );
+
+                if (!!$request->thumbnailLink) {
+                    return redirect(str_replace("=s220","", $request->thumbnailLink));
+                } else {
+                    return response(Storage::disk('google')->get($file->google_display_path))->header('Content-Type', $file->mime_type);
+                }
+            } else {
+                return response(Storage::disk('public')->get($file->local_path))->header('Content-Type', $file->mime_type);
+            }
+        } else {
+            return view('thotam-file-library::errors.dynamic', [
+                'error_code' => '404',
+                'error_description' => 'Không tìm thấy file này',
+                'title' => 'FileLibrary',
+            ]);
+        }
+    }
+
+    /**
      * image
      *
      * @return void

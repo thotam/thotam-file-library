@@ -33,3 +33,8 @@ Route::middleware(['web', 'auth', 'CheckAccount', 'CheckHr', 'CheckInfo'])->grou
 
 
 });
+
+Route::redirect('filelibrary', '/', 301);
+Route::group(['prefix' => 'filelibrary'], function () {
+    Route::get('{id}/mail_image',  [FileLibraryController::class, 'mail_image'])->name('filelibrary.mail_image');
+});
