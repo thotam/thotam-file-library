@@ -96,6 +96,20 @@ class FileLibrary extends Model
     }
 
     /**
+     * getImageMailLinkAttribute
+     *
+     * @return void
+     */
+    public function getImageMailLinkAttribute()
+    {
+        if ($file->drive == 'google') {
+            return Storage::disk('google')->url($file->google_display_path);
+        } else {
+            return Storage::disk('public')->url($file->local_path);
+        }
+    }
+
+    /**
      * getGoogleapisLinkAttribute
      *
      * @return void
