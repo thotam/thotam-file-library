@@ -102,10 +102,10 @@ class FileLibrary extends Model
      */
     public function getImageMailLinkAttribute()
     {
-        if ($file->drive == 'google') {
-            return Storage::disk('google')->url($file->google_display_path);
+        if ($this->drive == 'google') {
+            return Storage::disk('google')->url($this->google_display_path);
         } else {
-            return Storage::disk('public')->url($file->local_path);
+            return Storage::disk('public')->url($this->local_path);
         }
     }
 
