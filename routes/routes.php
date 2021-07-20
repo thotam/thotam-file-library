@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Thotam\ThotamFileLibrary\Http\Controllers\FileLibraryController;
+use Thotam\ThotamFileLibrary\Http\Controllers\FilePondUploadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +30,11 @@ Route::middleware(['web', 'auth', 'CheckAccount', 'CheckHr', 'CheckInfo'])->grou
         Route::get('{id}/video',  [FileLibraryController::class, 'video'])->name('filelibrary.video');
         Route::get('{id}/thumbnail',  [FileLibraryController::class, 'thumbnail'])->name('filelibrary.thumbnail');
 
+        Route::group(['prefix' => 'upload'], function () {
+            Route::post('/',  [FilePondUploadController::class, 'create_upload'])->name('filepond.upload');
+            Route::patch('/',  [FilePondUploadController::class, 'patch_upload']);
+            Route::delete('/',  [FilePondUploadController::class, 'delete_upload']);
+        });
     });
 
 
