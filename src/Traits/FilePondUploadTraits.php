@@ -9,6 +9,7 @@ trait FilePondUploadTraits
 {
     public $FilePondFormSubmit =  false;
     public $FilePondHasUpload =  false;
+    public $FilePondHasUploadError =  false;
 
     /**
      * FilePondUploadDone
@@ -45,7 +46,9 @@ trait FilePondUploadTraits
 
         $this->FilePondHasUpload = false;
 
-        if ($this->FilePondFormSubmit && !!$method) {
+        if ($this->FilePondHasUploadError) {
+            $this->dispatchBrowserEvent('unblockUI');
+        } elseif ($this->FilePondFormSubmit && !!$method) {
             $this->emit($method);
             $this->FilePondFormSubmit = false;
         }
@@ -58,7 +61,9 @@ trait FilePondUploadTraits
      */
     public function FilePondUploadSubmit($method = null)
     {
-        if ($this->FilePondHasUpload) {
+        if ($this->FilePondHasUploadError) {
+            $this->dispatchBrowserEvent('unblockUI');
+        } elseif ($this->FilePondHasUpload) {
             $this->FilePondFormSubmit = true;
         } else {
             if (!!$method) {

@@ -82,7 +82,7 @@ class FilePondUploadController extends Controller
 
             $response = array(
                 'id' => $FilePondUpload->id,
-                'status' => 2,
+                'status' => 3,
             );
             return response(json_encode($response), 200)->header('Content-Type', 'application/json');
         }
@@ -90,7 +90,7 @@ class FilePondUploadController extends Controller
         //The server is waiting for the next chunk to be sent.
         $response = array(
             'id' => $FilePondUpload->id,
-            'status' => 1,
+            'status' => 2,
             'uploadted' => $request->header('upload-offset') . " to " . ($request->header('upload-offset') + $request->header('content-length')),
         );
         return response(json_encode($response), 201)->header('Content-Type', 'application/json');
