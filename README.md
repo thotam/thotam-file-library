@@ -66,6 +66,13 @@ use Thotam\ThotamFileLibrary\Traits\FileLibraryTraits;
 use Thotam\ThotamFileLibrary\Traits\ThotamFileUploadTraits;
 ```
 
+### add schedule to App\Console\Kernel;
+
+```php
+$schedule->command('thotam-file-library:clean-public-disk')->everyTenMinutes();
+```
+
+
 ### Testing
 
 ```bash

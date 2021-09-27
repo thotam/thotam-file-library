@@ -3,6 +3,7 @@
 namespace Thotam\ThotamFileLibrary;
 
 use Illuminate\Support\ServiceProvider;
+use Thotam\ThotamFileLibrary\Console\Commands\CleanPublicDisk_Command;
 
 class ThotamFileLibraryServiceProvider extends ServiceProvider
 {
@@ -40,7 +41,9 @@ class ThotamFileLibraryServiceProvider extends ServiceProvider
             ], 'lang');*/
 
             // Registering package commands.
-            // $this->commands([]);
+            $this->commands([
+                CleanPublicDisk_Command::class
+            ]);
         }
 
         /*
