@@ -42,7 +42,7 @@ class CleanPublicDisk_Command extends Command
         $FileLibrarys = FileLibrary::where('active', true)
                    ->where('drive', 'google')
                    ->whereNull('cleaned')
-                   ->limit(100)
+                   ->limit(10000)
                    ->get();
 
         foreach ($FileLibrarys as $key => $file) {
