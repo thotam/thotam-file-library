@@ -48,15 +48,15 @@ class CleanPublicDisk_Command extends Command
         foreach ($FileLibrarys as $key => $file) {
             $check = true;
 
-            if ($file->google_id == NULL) {
-                $check = false;
-            }
-
             if ($file->youtube != NULL && $file->youtube_id == NULL) {
                 $check = false;
             }
 
             if ($file->vimeo != NULL && $file->vimeo_id == NULL) {
+                $check = false;
+            }
+
+            if ($file->google_id == NULL) {
                 $check = false;
             }
 
