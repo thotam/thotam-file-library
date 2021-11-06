@@ -37,29 +37,35 @@ class VimeoReUpload implements ShouldQueue
      */
     public function handle()
     {
-        Log::info("ThotamFileLibrary upload to Vimeo: ".$this->fileUpload->id. " - starting");
+        $this->fileUpload = FileLibrary::find($this->fileUpload->id);
 
-        $parameters = [
-            'name' => $this->fileUpload->vimeo_name,
-            'description' => $this->fileUpload->vimeo_description,
-            'privacy' => [
-                'view' => $this->fileUpload->vimeo_view,
-            ],
-        ];
+        if (!!$this->fileUpload->vimeo_id) {
+            Log::info("ThotamFileLibrary upload to Vimeo: ".$this->fileUpload->id. " - uploaded");
+        } else {
+            Log::info("ThotamFileLibrary upload to Vimeo: ".$this->fileUpload->id. " - starting");
 
-        Storage::disk('public')->putStream($this->fileUpload->local_path, Storage::disk('google')->readStream($this->fileUpload->local_path), ["mimetype" => $this->mime_type, 'visibility' => 'public']);
+            $parameters = [
+                'name' => $this->fileUpload->vimeo_name,
+                'description' => $this->fileUpload->vimeo_description,
+                'privacy' => [
+                    'view' => $this->fileUpload->vimeo_view,
+                ],
+            ];
 
-        $response = Vimeo::upload(Storage::disk('public')->path($this->fileUpload->local_path), $parameters);
+            Storage::disk('public')->putStream($this->fileUpload->local_path, Storage::disk('google')->readStream($this->fileUpload->local_path), ["mimetype" => $this->mime_type, 'visibility' => 'public']);
 
-        $this->fileUpload->update([
-            "vimeo_id" => Str::of($response)->explode('/')->last(),
-        ]);
+            $response = Vimeo::upload(Storage::disk('public')->path($this->fileUpload->local_path), $parameters);
 
-        $check = FileLibrary::find($this->fileUpload->id);
-        if (!!$check->google_id) {
-            Storage::disk('public')->delete($this->fileUpload->local_path);
+            $this->fileUpload->update([
+                "vimeo_id" => Str::of($response)->explode('/')->last(),
+            ]);
+
+            $check = FileLibrary::find($this->fileUpload->id);
+            if (!!$check->google_id) {
+                Storage::disk('public')->delete($this->fileUpload->local_path);
+            }
+
+            Log::info("ThotamFileLibrary upload to Vimeo: ".$this->fileUpload->id. " - finished");
         }
-
-        Log::info("ThotamFileLibrary upload to Vimeo: ".$this->fileUpload->id. " - finished");
     }
 }

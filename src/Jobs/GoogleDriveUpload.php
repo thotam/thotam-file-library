@@ -35,32 +35,38 @@ class GoogleDriveUpload implements ShouldQueue
      */
     public function handle()
     {
-        Log::info("ThotamFileLibrary upload to Google ID: ".$this->fileUpload->id. " - starting");
-        $disk = Storage::disk('google');
+        $this->fileUpload = FileLibrary::find($this->fileUpload->id);
 
-        $this->mime_type = Storage::disk('public')->mimeType($this->fileUpload->local_path);
+        if (!!$this->fileUpload->google_id) {
+            Log::info("ThotamFileLibrary upload to Google ID: ".$this->fileUpload->id. " - uploaded");
+        } else {
+            Log::info("ThotamFileLibrary upload to Google ID: ".$this->fileUpload->id. " - starting");
+            $disk = Storage::disk('google');
 
-        $disk->putStream($this->fileUpload->local_path, Storage::disk('public')->readStream($this->fileUpload->local_path), ["mimetype" => $this->mime_type, 'visibility' => 'public']);
+            $this->mime_type = Storage::disk('public')->mimeType($this->fileUpload->local_path);
 
-        $adapter = $disk->getDriver()->getAdapter();
+            $disk->putStream($this->fileUpload->local_path, Storage::disk('public')->readStream($this->fileUpload->local_path), ["mimetype" => $this->mime_type, 'visibility' => 'public']);
 
-        $metadata = $adapter->getMetadata($this->fileUpload->local_path);
+            $adapter = $disk->getDriver()->getAdapter();
 
-        $getFileObject = $adapter->getFileObject($metadata["virtual_path"]);
+            $metadata = $adapter->getMetadata($this->fileUpload->local_path);
 
-        $this->fileUpload->update([
-            "drive" => "google",
-            "mime_type" => $this->mime_type,
-            "google_virtual_path" => $metadata["virtual_path"],
-            "google_display_path" => $metadata["display_path"],
-            "google_id" => $getFileObject->id,
-        ]);
+            $getFileObject = $adapter->getFileObject($metadata["virtual_path"]);
 
-        $check = FileLibrary::find($this->fileUpload->id);
-        if (!!$check->vimeo_id || !!$check->youtube_id) {
-            Storage::disk('public')->delete($this->fileUpload->local_path);
+            $this->fileUpload->update([
+                "drive" => "google",
+                "mime_type" => $this->mime_type,
+                "google_virtual_path" => $metadata["virtual_path"],
+                "google_display_path" => $metadata["display_path"],
+                "google_id" => $getFileObject->id,
+            ]);
+
+            $check = FileLibrary::find($this->fileUpload->id);
+            if (!!$check->vimeo_id || !!$check->youtube_id) {
+                Storage::disk('public')->delete($this->fileUpload->local_path);
+            }
+
+            Log::info("ThotamFileLibrary upload to Google ID: ".$this->fileUpload->id. " - finished");
         }
-
-        Log::info("ThotamFileLibrary upload to Google ID: ".$this->fileUpload->id. " - finished");
     }
 }
