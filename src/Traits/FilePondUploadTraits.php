@@ -68,8 +68,9 @@ trait FilePondUploadTraits
         } else {
             if (!!$method) {
                 $this->emit($method);
+            } else {
+                $this->dispatchBrowserEvent('unblockUI');
             }
-            $this->dispatchBrowserEvent('unblockUI');
         }
     }
 }
