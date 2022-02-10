@@ -66,7 +66,7 @@ class FilePondUploadController extends Controller
                 'name' => $name,
             ]);
 
-            Storage::disk('local')->put($FilePondUpload->full_patch, $request->getContent());
+            Storage::disk('local')->write($FilePondUpload->full_patch, $request->getContent());
             Cache::forget($request->patch . 'FilePondUpload');
         } else {
             $upload = fopen(Storage::disk('local')->path($FilePondUpload->full_patch), 'a');

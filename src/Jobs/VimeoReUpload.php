@@ -52,7 +52,7 @@ class VimeoReUpload implements ShouldQueue
                 ],
             ];
 
-            Storage::disk('public')->putStream($this->fileUpload->local_path, Storage::disk('google')->readStream($this->fileUpload->local_path), ["mimetype" => $this->mime_type, 'visibility' => 'public']);
+            Storage::disk('public')->writeStream($this->fileUpload->local_path, Storage::disk('google')->readStream($this->fileUpload->local_path), ["mimetype" => $this->mime_type, 'visibility' => 'public']);
 
             $response = Vimeo::upload(Storage::disk('public')->path($this->fileUpload->local_path), $parameters);
 

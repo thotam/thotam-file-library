@@ -2,11 +2,12 @@
 
 namespace Thotam\ThotamFileLibrary\Providers;
 
-use Google_Client;
-use Masbug\Flysystem\GoogleDriveAdapter;
-use Illuminate\Support\ServiceProvider;
-use League\Flysystem\Filesystem;
 use Storage;
+use Google_Client;
+use League\Flysystem\Filesystem;
+use Illuminate\Support\ServiceProvider;
+use Masbug\Flysystem\GoogleDriveAdapter;
+use Illuminate\Filesystem\FilesystemAdapter;
 
 class ThotamGoogleDriveServiceProvider extends ServiceProvider
 {
@@ -32,7 +33,12 @@ class ThotamGoogleDriveServiceProvider extends ServiceProvider
                 ]
             );
 
-            return new Filesystem($adapter);
+            return new FilesystemAdapter(
+                new Filesystem($adapter),
+                $adapter
+            );
+
+            //return new Filesystem($adapter);
         });
     }
 

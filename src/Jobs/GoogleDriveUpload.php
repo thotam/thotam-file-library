@@ -45,20 +45,18 @@ class GoogleDriveUpload implements ShouldQueue
 
             $this->mime_type = Storage::disk('public')->mimeType($this->fileUpload->local_path);
 
-            $disk->putStream($this->fileUpload->local_path, Storage::disk('public')->readStream($this->fileUpload->local_path), ["mimetype" => $this->mime_type, 'visibility' => 'public']);
+            $disk->writeStream($this->fileUpload->local_path, Storage::disk('public')->readStream($this->fileUpload->local_path), ["mimetype" => $this->mime_type, 'visibility' => 'public']);
 
-            $adapter = $disk->getDriver()->getAdapter();
+            $adapter = $disk->getAdapter();
 
-            $metadata = $adapter->getMetadata($this->fileUpload->local_path);
-
-            $getFileObject = $adapter->getFileObject($metadata["virtual_path"]);
+            $metadata = $adapter->getMetadata($this->fileUpload->local_path)->extraMetadata();
 
             $this->fileUpload->update([
                 "drive" => "google",
                 "mime_type" => $this->mime_type,
                 "google_virtual_path" => $metadata["virtual_path"],
                 "google_display_path" => $metadata["display_path"],
-                "google_id" => $getFileObject->id,
+                "google_id" => $metadata["id"],
             ]);
 
             $check = FileLibrary::find($this->fileUpload->id);
