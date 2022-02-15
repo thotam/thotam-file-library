@@ -80,13 +80,19 @@ trait ThotamFileUploadTraits
      * @param  mixed $file
      * @param  mixed $path
      * @param  mixed $file_name
+     * @param  mixed $rename
      * @return void
      */
-    protected function save_to_drive(TemporaryUploadedFile $file, $path, $file_name)
+    protected function save_to_drive(TemporaryUploadedFile $file, $path, $file_name, $rename = false)
     {
         $this->temp_file = $file;
         $this->file_path = $path;
-        $this->file_name = $file_name." ".$this->temp_file->getClientOriginalName();
+        if ($rename) {
+            $_clientOriginalName = $this->temp_file->getClientOriginalName();
+            $this->file_name = $file_name.mb_substr($_clientOriginalName, mb_strrpos($_clientOriginalName, '.'));
+        } else {
+            $this->file_name = $file_name." ".$this->temp_file->getClientOriginalName();
+        }
         $this->mime_type = $this->temp_file->getMimeType();
         $this->saveAs();
         $this->put_to_db();
