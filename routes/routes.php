@@ -35,6 +35,11 @@ Route::middleware(['web', 'auth', 'CheckAccount', 'CheckHr', 'CheckInfo'])->grou
             Route::patch('/',  [FilePondUploadController::class, 'patch_upload']);
             Route::delete('/',  [FilePondUploadController::class, 'delete_upload']);
         });
+
+        Route::group(['prefix' => 'ckeditor'], function () {
+            Route::post('/',  [FilePondUploadController::class, 'ckeditor_upload'])->name('ckeditor.upload');
+        });
+
     });
 
 

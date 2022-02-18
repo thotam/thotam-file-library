@@ -7,7 +7,10 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use Thotam\ThotamFileLibrary\Models\FileLibrary;
 use Thotam\ThotamFileLibrary\Models\FilePondUpload;
+use Thotam\ThotamFileLibrary\Jobs\GoogleDriveUpload;
 
 class FilePondUploadController extends Controller
 {
@@ -127,5 +130,65 @@ class FilePondUploadController extends Controller
         ]);
 
         return response($FilePondUpload->id . " Deleted", 200)->header('Content-Type', 'text/plain');
+    }
+
+    /**
+     * ckeditor_upload
+     *
+     * @param  mixed $request
+     * @return void
+     */
+    public function ckeditor_upload(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'upload' => 'required|file|image',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => [
+                    'message' => collect($validator->errors()->get('upload'))->implode(', '),
+                ]
+            ]);
+
+        }
+
+        //action
+        try {
+            $time = now();
+
+            $file_name = $time->format('Ymd His') ." ". $request->upload->getClientOriginalName();
+            $file_path = "CKEditor/" . $time->format('Y') . "/" . $time->format('m') ."/" . $time->format('d');
+            $mime_type = $request->upload->getMimeType();
+
+            $local_path = $request->upload->storeAs($file_path, $file_name, ["disk" => "public"]);
+
+            $FileLibrary = FileLibrary::create([
+                "drive" => "public",
+                "file_name" => $file_name,
+                "mime_type" => $mime_type,
+                "active" => true,
+                "local_path" => $local_path,
+            ]);
+
+            GoogleDriveUpload::dispatch($FileLibrary);
+
+            return response()->json([
+                'url' => $FileLibrary->image_mail_link,
+            ]);
+
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response()->json([
+                'error' => [
+                    'message' => implode(" - ", $e->errorInfo),
+                ]
+            ]);
+        } catch (\Exception $e2) {
+            return response()->json([
+                'error' => [
+                    'message' => $e2->getMessage(),
+                ]
+            ]);
+        }
     }
 }
