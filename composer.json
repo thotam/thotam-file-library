@@ -21,7 +21,7 @@
         "illuminate/contracts": "^9.0",
         "illuminate/support": "^9.0",
         "masbug/flysystem-google-drive-ext": "^2.1",
-        "thotam/vimeo-laravel": "dev-master"
+        "vimeo/laravel": "5.7"
     },
     "require-dev": {
         "orchestra/testbench": "^6.0",
