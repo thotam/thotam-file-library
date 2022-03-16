@@ -39,12 +39,13 @@ Route::middleware(['web', 'auth', 'CheckAccount', 'CheckHr', 'CheckInfo'])->grou
         Route::group(['prefix' => 'ckeditor'], function () {
             Route::post('/',  [FilePondUploadController::class, 'ckeditor_upload'])->name('ckeditor.upload');
         });
+
     });
+
+
 });
 
-Route::middleware(['web'])->group(function () {
-    Route::redirect('filelibrary', '/', 301);
-    Route::group(['prefix' => 'filelibrary'], function () {
-        Route::get('{id}/mail_image',  [FileLibraryController::class, 'mail_image'])->name('filelibrary.mail_image');
-    });
+Route::redirect('filelibrary', '/', 301);
+Route::group(['prefix' => 'filelibrary'], function () {
+    Route::get('{id}/mail_image',  [FileLibraryController::class, 'mail_image'])->name('filelibrary.mail_image');
 });
