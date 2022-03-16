@@ -106,6 +106,16 @@ class FileLibrary extends Model
     }
 
     /**
+     * getHomeMailLinkAttribute
+     *
+     * @return void
+     */
+    public function getHomeMailLinkAttribute()
+    {
+        return route('filelibrary.home_image', ['id' => $this->id]);
+    }
+
+    /**
      * getGoogleapisLinkAttribute
      *
      * @return void
