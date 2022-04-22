@@ -56,6 +56,16 @@ class FileLibrary extends Model
     }
 
     /**
+     * getHomeViewLinkAttribute
+     *
+     * @return void
+     */
+    public function getHomeViewLinkAttribute()
+    {
+        return route('filelibrary.home_view', ['id' => $this->id]);
+    }
+
+    /**
      * getEmbedLinkAttribute
      *
      * @return void
