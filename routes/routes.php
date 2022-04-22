@@ -47,6 +47,6 @@ Route::middleware(['web'])->group(function () {
     Route::redirect('filelibrary', '/', 301);
     Route::group(['prefix' => 'filelibrary'], function () {
         Route::get('{id}/mail_image',  [FileLibraryController::class, 'mail_image'])->name('filelibrary.mail_image');
-        Route::get('{id}/view',  [FileLibraryController::class, 'view'])->name('filelibrary.home_view');
+        Route::get('{id}/home_view',  [FileLibraryController::class, 'view'])->name('filelibrary.home_view');
     });
 });
