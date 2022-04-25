@@ -75,11 +75,12 @@ class FileLibraryController extends Controller
                 $client->refreshToken($config['refreshToken']);
                 $service = new \Google_Service_Drive($client);
                 $request = $service->files->get(
-                    $file->google_id, array('fields' => 'thumbnailLink')
+                    $file->google_id,
+                    array('fields' => 'thumbnailLink')
                 );
 
                 if (!!$request->thumbnailLink) {
-                    return redirect(str_replace("=s220","", $request->thumbnailLink));
+                    return redirect(str_replace("=s220", "", $request->thumbnailLink));
                 } else {
                     return response(Storage::disk('google')->get($file->google_display_path))->header('Content-Type', $file->mime_type);
                 }
@@ -112,11 +113,12 @@ class FileLibraryController extends Controller
                 $client->refreshToken($config['refreshToken']);
                 $service = new \Google_Service_Drive($client);
                 $request = $service->files->get(
-                    $file->google_id, array('fields' => 'thumbnailLink')
+                    $file->google_id,
+                    array('fields' => 'thumbnailLink')
                 );
 
                 if (!!$request->thumbnailLink) {
-                    return redirect(str_replace("=s220","", $request->thumbnailLink));
+                    return redirect(str_replace("=s220", "", $request->thumbnailLink));
                 } else {
                     return response(Storage::disk('google')->get($file->google_display_path))->header('Content-Type', $file->mime_type);
                 }
@@ -142,7 +144,7 @@ class FileLibraryController extends Controller
         $file = FileLibrary::find($id);
         if (!!$file) {
             if ($file->drive == 'google') {
-                return redirect("https://www.googleapis.com/drive/v3/files/".$file->google_id."?alt=media&key=" . config('thotam-file-library.googleApiKey'));
+                return redirect("https://www.googleapis.com/drive/v3/files/" . $file->google_id . "?alt=media&key=" . config('thotam-file-library.googleApiKey'));
             } else {
                 return response(Storage::disk('public')->get($file->local_path))->header('Content-Type', $file->mime_type);
             }
@@ -195,11 +197,12 @@ class FileLibraryController extends Controller
                 $client->refreshToken($config['refreshToken']);
                 $service = new \Google_Service_Drive($client);
                 $request = $service->files->get(
-                    $file->google_id, array('fields' => 'thumbnailLink')
+                    $file->google_id,
+                    array('fields' => 'thumbnailLink')
                 );
 
                 if (!!$request->thumbnailLink) {
-                    return redirect(str_replace("=s220","=s660", $request->thumbnailLink));
+                    return redirect(str_replace("=s220", "=s660", $request->thumbnailLink));
                 } else {
                     return redirect(Storage::disk('public')->url("Media/thumbnail-default.png"));
                 }
@@ -227,7 +230,7 @@ class FileLibraryController extends Controller
             if ($file->drive == 'google') {
                 //return redirect(Storage::disk('google')->getAdapter()->getFileObject($file->google_virtual_path)->webContentLink);
 
-                return redirect("https://www.googleapis.com/drive/v3/files/".$file->google_id."?alt=media&key=" . config('thotam-file-library.googleApiKey'));
+                return redirect("https://www.googleapis.com/drive/v3/files/" . $file->google_id . "?alt=media&key=" . config('thotam-file-library.googleApiKey'));
             } else {
                 $stream = new ThotamVideoStream(Storage::disk('public')->path($file->local_path));
                 $stream->start();
@@ -253,7 +256,7 @@ class FileLibraryController extends Controller
             if (!!$file->vimeo_id) {
                 return $file->vimeo_id;
 
-                return redirect("https://www.googleapis.com/drive/v3/files/".$file->google_id."?alt=media&key=" . config('thotam-file-library.googleApiKey'));
+                return redirect("https://www.googleapis.com/drive/v3/files/" . $file->google_id . "?alt=media&key=" . config('thotam-file-library.googleApiKey'));
             } else {
                 $stream = new ThotamVideoStream(Storage::disk('public')->path($file->local_path));
                 $stream->start();
@@ -266,5 +269,4 @@ class FileLibraryController extends Controller
             ]);
         }
     }
-
 }
