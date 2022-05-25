@@ -2,12 +2,12 @@
 
 namespace Thotam\ThotamFileLibrary\Http\Controllers;
 
-use League\Flysystem\Util;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use League\Flysystem\WhitespacePathNormalizer;
 use Thotam\ThotamFileLibrary\Models\FileLibrary;
 use Thotam\ThotamFileLibrary\Models\FilePondUpload;
 use Thotam\ThotamFileLibrary\Jobs\GoogleDriveUpload;
@@ -57,15 +57,15 @@ class FilePondUploadController extends Controller
         //Do save chunk
         if ($request->header('upload-offset') == 0) {
             $hash = Str::random(30);
-            $meta = Str::replace('/', '_', '-meta'.base64_encode($FilePondUpload->id . '_' . $request->header('upload-name')).'-');
+            $meta = Str::replace('/', '_', '-meta' . base64_encode($FilePondUpload->id . '_' . $request->header('upload-name')) . '-');
             $extension = '.tt';
 
-            $name = $hash.$meta.$extension;
+            $name = $hash . $meta . $extension;
 
             $FilePondUpload->update([
                 'status' => 2,
                 'livewire_patch' => $name,
-                'full_patch' => Util::normalizeRelativePath(config('livewire.temporary_file_upload.directory') ?: 'livewire-tmp') . '/' . $name,
+                'full_patch' => (new WhitespacePathNormalizer)->normalizePath(config('livewire.temporary_file_upload.directory') ?: 'livewire-tmp') . '/' . $name,
                 'name' => $name,
             ]);
 
@@ -150,15 +150,14 @@ class FilePondUploadController extends Controller
                     'message' => collect($validator->errors()->get('upload'))->implode(', '),
                 ]
             ]);
-
         }
 
         //action
         try {
             $time = now();
 
-            $file_name = $time->format('Ymd His') ." ". $request->upload->getClientOriginalName();
-            $file_path = "CKEditor/" . $time->format('Y') . "/" . $time->format('m') ."/" . $time->format('d');
+            $file_name = $time->format('Ymd His') . " " . $request->upload->getClientOriginalName();
+            $file_path = "CKEditor/" . $time->format('Y') . "/" . $time->format('m') . "/" . $time->format('d');
             $mime_type = $request->upload->getMimeType();
 
             $local_path = $request->upload->storeAs($file_path, $file_name, ["disk" => "public"]);
@@ -176,7 +175,6 @@ class FilePondUploadController extends Controller
             return response()->json([
                 'url' => $FileLibrary->image_mail_link,
             ]);
-
         } catch (\Illuminate\Database\QueryException $e) {
             return response()->json([
                 'error' => [
