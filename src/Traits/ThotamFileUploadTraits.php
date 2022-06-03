@@ -2,6 +2,7 @@
 
 namespace Thotam\ThotamFileLibrary\Traits;
 
+use Illuminate\Http\UploadedFile;
 use Livewire\TemporaryUploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Thotam\ThotamFileLibrary\Jobs\VimeoUpload;
@@ -27,7 +28,7 @@ trait ThotamFileUploadTraits
     {
         $this->ThotamFileUploadStep[$model] = $step;
 
-        if ($this->ThotamFileSubmit && $step ==4) {
+        if ($this->ThotamFileSubmit && $step == 4) {
             $this->check_upload();
         }
     }
@@ -89,10 +90,23 @@ trait ThotamFileUploadTraits
         $this->file_path = $path;
         if ($rename) {
             $_clientOriginalName = $this->temp_file->getClientOriginalName();
-            $this->file_name = $file_name.mb_substr($_clientOriginalName, mb_strrpos($_clientOriginalName, '.'));
+            $this->file_name = $file_name . mb_substr($_clientOriginalName, mb_strrpos($_clientOriginalName, '.'));
         } else {
-            $this->file_name = $file_name." ".$this->temp_file->getClientOriginalName();
+            $this->file_name = $file_name . " " . $this->temp_file->getClientOriginalName();
         }
+        $this->mime_type = $this->temp_file->getMimeType();
+        $this->saveAs();
+        $this->put_to_db();
+        $this->add_jobs();
+
+        return $this->fileUpload;
+    }
+
+    protected function move_to_drive($path, $file_name, $new_path, $mime_type = null)
+    {
+        $this->temp_file = new UploadedFile(Storage::path($path), $file_name, $mime_type);
+        $this->file_path = $new_path;
+        $this->file_name = $file_name;
         $this->mime_type = $this->temp_file->getMimeType();
         $this->saveAs();
         $this->put_to_db();
