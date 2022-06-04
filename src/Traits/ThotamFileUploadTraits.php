@@ -163,12 +163,12 @@ trait ThotamFileUploadTraits
     }
 
     /**
-     * delete
+     * delete_file
      *
      * @param  mixed $file
      * @return void
      */
-    protected function delete(TemporaryUploadedFile $file)
+    protected function delete_file(TemporaryUploadedFile $file)
     {
         $file->delete();
     }
