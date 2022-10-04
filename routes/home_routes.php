@@ -17,8 +17,8 @@ use Thotam\ThotamFileLibrary\Http\Controllers\FilePondUploadController;
 
 Route::middleware(['web'])->group(function () {
 
-    Route::redirect('filelibrary', '/', 301);
-    Route::group(['prefix' => 'filelibrary'], function () {
+    Route::redirect('home-filelibrary', '/', 301);
+    Route::group(['prefix' => 'home-filelibrary'], function () {
         Route::get('{id}/mail_image',  [FileLibraryController::class, 'mail_image'])->name('filelibrary.home_mail_image');
         Route::get('{id}/home_view',  [FileLibraryController::class, 'view'])->name('filelibrary.home_view');
     });
