@@ -2,6 +2,8 @@
 
 namespace Thotam\ThotamFileLibrary\Jobs;
 
+use Exception;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\SerializesModels;
@@ -35,12 +37,17 @@ class GoogleDriveUpload implements ShouldQueue
      */
     public function handle()
     {
+        $today = now();
+        if ($today->dayOfWeek == Carbon::SATURDAY && $today->hour >= 8 && $today->hour <= 12) {
+            throw new Exception("Không xử lý file vào sáng thứ 7 để đảm bảo đào tạo");
+        }
+
         $this->fileUpload = FileLibrary::find($this->fileUpload->id);
 
         if (!!$this->fileUpload->google_id) {
-            Log::info("ThotamFileLibrary upload to Google ID: ".$this->fileUpload->id. " - uploaded");
+            Log::info("ThotamFileLibrary upload to Google ID: " . $this->fileUpload->id . " - uploaded");
         } else {
-            Log::info("ThotamFileLibrary upload to Google ID: ".$this->fileUpload->id. " - starting");
+            Log::info("ThotamFileLibrary upload to Google ID: " . $this->fileUpload->id . " - starting");
             $disk = Storage::disk('google');
 
             $this->mime_type = Storage::disk('public')->mimeType($this->fileUpload->local_path);
@@ -64,7 +71,7 @@ class GoogleDriveUpload implements ShouldQueue
                 Storage::disk('public')->delete($this->fileUpload->local_path);
             }
 
-            Log::info("ThotamFileLibrary upload to Google ID: ".$this->fileUpload->id. " - finished");
+            Log::info("ThotamFileLibrary upload to Google ID: " . $this->fileUpload->id . " - finished");
         }
     }
 }
