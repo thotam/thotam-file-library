@@ -52,8 +52,8 @@ class VimeoUpload implements ShouldQueue
             Log::info("ThotamFileLibrary upload to Vimeo: " . $this->fileUpload->id . " - starting");
 
             $parameters = [
-                'name' => $this->fileUpload->vimeo_name,
-                'description' => $this->fileUpload->vimeo_description,
+                'name' => mb_substr($this->fileUpload->vimeo_name, 0, 256),
+                'description' => mb_substr($this->fileUpload->vimeo_description, 0, 5000),
                 'privacy' => [
                     'view' => $this->fileUpload->vimeo_view,
                 ],
