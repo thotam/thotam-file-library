@@ -40,13 +40,13 @@ class VimeoUpload implements ShouldQueue
         $this->fileUpload = FileLibrary::find($this->fileUpload->id);
 
         if (!!$this->fileUpload->vimeo_id) {
-            Log::info("ThotamFileLibrary upload to Vimeo: ".$this->fileUpload->id. " - uploaded");
+            Log::info("ThotamFileLibrary upload to Vimeo: " . $this->fileUpload->id . " - uploaded");
         } else {
-            Log::info("ThotamFileLibrary upload to Vimeo: ".$this->fileUpload->id. " - starting");
+            Log::info("ThotamFileLibrary upload to Vimeo: " . $this->fileUpload->id . " - starting");
 
             $parameters = [
-                'name' => $this->fileUpload->vimeo_name,
-                'description' => $this->fileUpload->vimeo_description,
+                'name' => mb_substr($this->fileUpload->vimeo_name, 0, 256),
+                'description' => mb_substr($this->fileUpload->vimeo_description, 0, 5000),
                 'privacy' => [
                     'view' => $this->fileUpload->vimeo_view,
                 ],
@@ -64,7 +64,7 @@ class VimeoUpload implements ShouldQueue
                 Storage::disk('public')->delete($this->fileUpload->local_path);
             }
 
-            Log::info("ThotamFileLibrary upload to Vimeo: ".$this->fileUpload->id. " - finished");
+            Log::info("ThotamFileLibrary upload to Vimeo: " . $this->fileUpload->id . " - finished");
         }
     }
 }
