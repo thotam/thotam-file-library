@@ -38,7 +38,7 @@ class GoogleDriveUpload implements ShouldQueue
     public function handle()
     {
         $today = now();
-        if ($today->dayOfWeek == Carbon::SATURDAY && $today->hour >= 8 && $today->hour <= 12) {
+        if ($today->dayOfWeek == Carbon::SATURDAY && $today->hour >= 8 && $today->hour <= 11) {
             throw new Exception("Không xử lý file vào sáng thứ 7 để đảm bảo đào tạo");
         }
 
@@ -58,6 +58,10 @@ class GoogleDriveUpload implements ShouldQueue
 
             $metadata = $adapter->getMetadata($this->fileUpload->local_path)->extraMetadata();
 
+            if (!(bool)$metadata["id"]) {
+                throw new Exception("Không thể lấy Google ID");
+            }
+
             $this->fileUpload->update([
                 "drive" => "google",
                 "mime_type" => $this->mime_type,
@@ -67,7 +71,8 @@ class GoogleDriveUpload implements ShouldQueue
             ]);
 
             $check = FileLibrary::find($this->fileUpload->id);
-            if (!!$check->vimeo_id || !!$check->youtube_id) {
+            // if (!!$check->vimeo_id || !!$check->youtube_id) {
+            if (!(bool)$check->vimeo || (bool)$check->vimeo_id) {
                 Storage::disk('public')->delete($this->fileUpload->local_path);
             }
 
