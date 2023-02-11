@@ -40,7 +40,7 @@ class VimeoReUpload implements ShouldQueue
     public function handle()
     {
         $today = now();
-        if ($today->dayOfWeek == Carbon::SATURDAY && $today->hour >= 8 && $today->hour <= 12) {
+        if ($today->dayOfWeek == Carbon::SATURDAY && $today->hour >= 8 && $today->hour <= 11) {
             throw new Exception("Không xử lý file vào sáng thứ 7 để đảm bảo đào tạo");
         }
 
