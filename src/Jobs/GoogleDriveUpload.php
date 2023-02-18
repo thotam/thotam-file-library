@@ -50,9 +50,13 @@ class GoogleDriveUpload implements ShouldQueue
             Log::info("ThotamFileLibrary upload to Google ID: " . $this->fileUpload->id . " - starting");
             $disk = Storage::disk('google');
 
-            $this->mime_type = Storage::disk('public')->mimeType($this->fileUpload->local_path);
+            if (Storage::disk('public')->exists($this->fileUpload->local_path)) {
+                $this->mime_type = Storage::disk('public')->mimeType($this->fileUpload->local_path);
 
-            $disk->writeStream($this->fileUpload->local_path, Storage::disk('public')->readStream($this->fileUpload->local_path), ["mimetype" => $this->mime_type, 'visibility' => 'public']);
+                $disk->writeStream($this->fileUpload->local_path, Storage::disk('public')->readStream($this->fileUpload->local_path), ["mimetype" => $this->mime_type, 'visibility' => 'public']);
+            } elseif (!Storage::disk('google')->exists($this->fileUpload->local_path)) {
+                throw new Exception("File không tồn tại, vui lòng upload lại: " . $this->fileUpload->id);
+            }
 
             $adapter = $disk->getAdapter();
 
