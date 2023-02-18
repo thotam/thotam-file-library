@@ -38,18 +38,26 @@ class GoogleDriveUpload implements ShouldQueue
         $this->fileUpload = FileLibrary::find($this->fileUpload->id);
 
         if (!!$this->fileUpload->google_id) {
-            Log::info("ThotamFileLibrary upload to Google ID: ".$this->fileUpload->id. " - uploaded");
+            Log::info("ThotamFileLibrary upload to Google ID: " . $this->fileUpload->id . " - uploaded");
         } else {
-            Log::info("ThotamFileLibrary upload to Google ID: ".$this->fileUpload->id. " - starting");
+            Log::info("ThotamFileLibrary upload to Google ID: " . $this->fileUpload->id . " - starting");
             $disk = Storage::disk('google');
 
-            $this->mime_type = Storage::disk('public')->mimeType($this->fileUpload->local_path);
+            if (Storage::disk('public')->exists($this->fileUpload->local_path)) {
+                $this->mime_type = Storage::disk('public')->mimeType($this->fileUpload->local_path);
 
-            $disk->writeStream($this->fileUpload->local_path, Storage::disk('public')->readStream($this->fileUpload->local_path), ["mimetype" => $this->mime_type, 'visibility' => 'public']);
+                $disk->writeStream($this->fileUpload->local_path, Storage::disk('public')->readStream($this->fileUpload->local_path), ["mimetype" => $this->mime_type, 'visibility' => 'public']);
+            } elseif (!Storage::disk('google')->exists($this->fileUpload->local_path)) {
+                throw new Exception("File không tồn tại, vui lòng upload lại: " . $this->fileUpload->id);
+            }
 
             $adapter = $disk->getAdapter();
 
             $metadata = $adapter->getMetadata($this->fileUpload->local_path)->extraMetadata();
+
+            if (!(bool)$metadata["id"]) {
+                throw new Exception("Không thể lấy Google ID");
+            }
 
             $this->fileUpload->update([
                 "drive" => "google",
@@ -64,7 +72,7 @@ class GoogleDriveUpload implements ShouldQueue
                 Storage::disk('public')->delete($this->fileUpload->local_path);
             }
 
-            Log::info("ThotamFileLibrary upload to Google ID: ".$this->fileUpload->id. " - finished");
+            Log::info("ThotamFileLibrary upload to Google ID: " . $this->fileUpload->id . " - finished");
         }
     }
 }
