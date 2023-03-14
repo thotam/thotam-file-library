@@ -59,6 +59,12 @@ class VimeoUpload implements ShouldQueue
                 ],
             ];
 
+            if (!Storage::disk('public')->exists($this->fileUpload->local_path) && Storage::disk('google')->exists($this->fileUpload->local_path)) {
+                $this->mime_type = Storage::disk('google')->mimeType($this->fileUpload->local_path);
+
+                Storage::disk('public')->writeStream($this->fileUpload->local_path, Storage::disk('google')->readStream($this->fileUpload->local_path), ["mimetype" => $this->mime_type, 'visibility' => 'public']);
+            }
+
             $response = Vimeo::upload(Storage::disk('public')->path($this->fileUpload->local_path), $parameters);
 
             $this->fileUpload->update([
