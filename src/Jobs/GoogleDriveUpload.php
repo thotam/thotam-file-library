@@ -2,6 +2,8 @@
 
 namespace Thotam\ThotamFileLibrary\Jobs;
 
+use Exception;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\SerializesModels;
@@ -35,6 +37,11 @@ class GoogleDriveUpload implements ShouldQueue
      */
     public function handle()
     {
+        $today = now();
+        if ($today->dayOfWeek == Carbon::SATURDAY && $today->hour >= 8 && $today->hour <= 11) {
+            throw new Exception("Không xử lý file vào sáng thứ 7 để đảm bảo đào tạo");
+        }
+
         $this->fileUpload = FileLibrary::find($this->fileUpload->id);
 
         if (!!$this->fileUpload->google_id) {
@@ -68,7 +75,8 @@ class GoogleDriveUpload implements ShouldQueue
             ]);
 
             $check = FileLibrary::find($this->fileUpload->id);
-            if (!!$check->vimeo_id || !!$check->youtube_id) {
+            // if (!!$check->vimeo_id || !!$check->youtube_id) {
+            if (!(bool)$check->vimeo || (bool)$check->vimeo_id) {
                 Storage::disk('public')->delete($this->fileUpload->local_path);
             }
 

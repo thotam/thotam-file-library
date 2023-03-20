@@ -2,6 +2,8 @@
 
 namespace Thotam\ThotamFileLibrary\Jobs;
 
+use Exception;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Bus\Queueable;
 use Vimeo\Laravel\Facades\Vimeo;
@@ -37,6 +39,11 @@ class VimeoUpload implements ShouldQueue
      */
     public function handle()
     {
+        $today = now();
+        if ($today->dayOfWeek == Carbon::SATURDAY && $today->hour >= 8 && $today->hour <= 11) {
+            throw new Exception("Không xử lý file vào sáng thứ 7 để đảm bảo đào tạo");
+        }
+
         $this->fileUpload = FileLibrary::find($this->fileUpload->id);
 
         if (!!$this->fileUpload->vimeo_id) {
@@ -51,6 +58,12 @@ class VimeoUpload implements ShouldQueue
                     'view' => $this->fileUpload->vimeo_view,
                 ],
             ];
+
+            if (!Storage::disk('public')->exists($this->fileUpload->local_path) && Storage::disk('google')->exists($this->fileUpload->local_path)) {
+                $this->mime_type = Storage::disk('google')->mimeType($this->fileUpload->local_path);
+
+                Storage::disk('public')->writeStream($this->fileUpload->local_path, Storage::disk('google')->readStream($this->fileUpload->local_path), ["mimetype" => $this->mime_type, 'visibility' => 'public']);
+            }
 
             $response = Vimeo::upload(Storage::disk('public')->path($this->fileUpload->local_path), $parameters);
 
