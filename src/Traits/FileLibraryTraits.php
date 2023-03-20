@@ -4,7 +4,8 @@ namespace Thotam\ThotamFileLibrary\Traits;
 
 use Thotam\ThotamFileLibrary\Models\FileLibrary;
 
-trait FileLibraryTraits {
+trait FileLibraryTraits
+{
 
     /**
      * Get all of the model's file_libraries.
@@ -21,7 +22,7 @@ trait FileLibraryTraits {
      * @param  mixed $tag
      * @return void
      */
-    public function addLibrary(FileLibrary $lib, String $tag = null)
+    public function addLibrary(FileLibrary $lib, string $tag = null)
     {
         if (!!$tag) {
             $lib->update(["tag" => $tag]);
@@ -37,10 +38,12 @@ trait FileLibraryTraits {
      * @param  mixed $tag
      * @return void
      */
-    public function addLibraries($libs, String $tag = null)
+    public function addLibraries($libs, string $tag = null)
     {
-        foreach ($libs as $lib) {
-            $this->addLibrary($lib, $tag);
+        if (!is_null($libs)) {
+            foreach ($libs as $lib) {
+                $this->addLibrary($lib, $tag);
+            }
         }
     }
 
@@ -62,10 +65,12 @@ trait FileLibraryTraits {
      * @param  mixed $tag
      * @return void
      */
-    public function removeLibraries($libs, String $tag = null)
+    public function removeLibraries($libs, string $tag = null)
     {
-        foreach ($libs as $lib) {
-            $this->removeLibrary($lib);
+        if (!is_null($libs)) {
+            foreach ($libs as $lib) {
+                $this->removeLibrary($lib);
+            }
         }
     }
 
@@ -75,7 +80,7 @@ trait FileLibraryTraits {
      * @param  mixed $tag
      * @return void
      */
-    public function getLibrary(String $tag = null)
+    public function getLibrary(string $tag = null)
     {
         $library = $this->file_libraries()->latest();
 
@@ -92,7 +97,7 @@ trait FileLibraryTraits {
      * @param  mixed $tag
      * @return void
      */
-    public function getLibraries(String $tag = null)
+    public function getLibraries(string $tag = null)
     {
         $library = $this->file_libraries();
 
@@ -102,5 +107,4 @@ trait FileLibraryTraits {
 
         return $library->get();
     }
-
 }
