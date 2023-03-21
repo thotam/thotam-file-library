@@ -3,6 +3,7 @@
 namespace Thotam\ThotamFileLibrary\Traits;
 
 use Thotam\ThotamFileLibrary\Models\FileLibrary;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 trait FileLibraryTraits
 {
@@ -13,6 +14,14 @@ trait FileLibraryTraits
     public function file_libraries()
     {
         return $this->morphMany(FileLibrary::class, 'file_library');
+    }
+
+    /**
+     * Get all of the model's file_library.
+     */
+    public function file_library(): MorphOne
+    {
+        return $this->morphOne(FileLibrary::class, 'file_library')->ofMany('id', 'max');
     }
 
     /**

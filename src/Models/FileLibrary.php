@@ -4,9 +4,9 @@ namespace Thotam\ThotamFileLibrary\Models;
 
 use Wildside\Userstamps\Userstamps;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Support\Facades\Storage;
 
 class FileLibrary extends Model
 {
@@ -28,6 +28,15 @@ class FileLibrary extends Model
      */
     protected $casts = [
         'youtube_data' => 'array',
+    ];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'view_link',
     ];
 
     /**
